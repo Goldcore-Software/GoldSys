@@ -4,52 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoldSysKernel.Core.GS
+namespace GoldSysKernel.Core.CS
 {
-    internal class GSLog
+    internal class CSLog
     {
         public static int LogTerminal = 1;
         public static void Log(string messager, string message, GSLogType type) 
         {
             Console.ForegroundColor = ConsoleColor.White;
-            GSTerminal.Write("["+messager+"] ", LogTerminal);
+            CSTerminal.Write("["+messager+"] ", LogTerminal);
             switch (type)
             {
                 case GSLogType.Info:
-                    GSTerminal.Write("[INFO] ", LogTerminal);
+                    CSTerminal.Write("[INFO] ", LogTerminal);
                     break;
                 case GSLogType.Fatal:
-                    GSTerminal.Write("[", LogTerminal);
+                    CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    GSTerminal.Write("FATAL", LogTerminal);
+                    CSTerminal.Write("FATAL", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
-                    GSTerminal.Write("] ", LogTerminal);
+                    CSTerminal.Write("] ", LogTerminal);
                     break;
                 case GSLogType.Error:
-                    GSTerminal.Write("[", LogTerminal);
+                    CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    GSTerminal.Write("ERROR", LogTerminal);
+                    CSTerminal.Write("ERROR", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
-                    GSTerminal.Write("] ", LogTerminal);
+                    CSTerminal.Write("] ", LogTerminal);
                     break;
                 case GSLogType.Warning:
-                    GSTerminal.Write("[", LogTerminal);
+                    CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    GSTerminal.Write("WARN", LogTerminal);
+                    CSTerminal.Write("WARN", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
-                    GSTerminal.Write("] ", LogTerminal);
+                    CSTerminal.Write("] ", LogTerminal);
                     break;
                 case GSLogType.Ok:
-                    GSTerminal.Write("[", LogTerminal);
+                    CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    GSTerminal.Write("OK", LogTerminal);
+                    CSTerminal.Write("OK", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
-                    GSTerminal.Write("] ", LogTerminal);
+                    CSTerminal.Write("] ", LogTerminal);
                     break;
                 default:
                     break;
             }
-            GSTerminal.WriteLine(message, LogTerminal);
+            CSTerminal.WriteLine(message, LogTerminal);
         }
     }
     enum GSLogType

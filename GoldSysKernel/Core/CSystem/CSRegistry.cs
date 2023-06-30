@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoldSysKernel.Core.GS
+namespace GoldSysKernel.Core.CS
 {
     // This module is not in use!
-    internal class GSRegistry
+    internal class CSRegistry
     {
         public static Dictionary<string, string> reg = new Dictionary<string, string>();
     }

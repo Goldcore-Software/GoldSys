@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoldSysKernel.Core.GS
+namespace GoldSysKernel.Core.CS
 {
-    internal class GSTerminal
+    internal class CSTerminal
     {
         private static int DisplayTerm = 0;
         public static int DisplayTerminal { get { return DisplayTerm; } set { SetTerminal(value); } }

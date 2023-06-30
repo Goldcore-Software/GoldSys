@@ -1,4 +1,4 @@
-﻿using GoldSysKernel.Core.GS;
+﻿using GoldSysKernel.Core.CS;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,18 +51,18 @@ namespace GoldSysKernel.Core
                     }
                     break;
                 case "term":
-                    GSTerminal.DisplayTerminal = int.Parse(cmdsplit[1]);
+                    CSTerminal.DisplayTerminal = int.Parse(cmdsplit[1]);
                     break;
                 case "cls":
                     Console.Clear();
                     break;
                 case "logtest":
-                    GSTerminal.DisplayTerminal = 1;
-                    GSLog.Log("Log Test!", "This is a test of the logger 1", GSLogType.Info);
-                    GSLog.Log("Log Test!", "This is a test of the logger 2", GSLogType.Fatal);
-                    GSLog.Log("Log Test!", "This is a test of the logger 3", GSLogType.Error);
-                    GSLog.Log("Log Test!", "This is a test of the logger 4", GSLogType.Warning);
-                    GSLog.Log("Log Test!", "This is a test of the logger 5", GSLogType.Ok);
+                    CSTerminal.DisplayTerminal = 1;
+                    CSLog.Log("Log Test!", "This is a test of the logger 1", GSLogType.Info);
+                    CSLog.Log("Log Test!", "This is a test of the logger 2", GSLogType.Fatal);
+                    CSLog.Log("Log Test!", "This is a test of the logger 3", GSLogType.Error);
+                    CSLog.Log("Log Test!", "This is a test of the logger 4", GSLogType.Warning);
+                    CSLog.Log("Log Test!", "This is a test of the logger 5", GSLogType.Ok);
                     break;
                 case "crashtest":
                     throw new Exception("you broke it.");

@@ -22,26 +22,20 @@
 
     <ItemGroup>
       <None Remove="mscorlib.dll" />
-      <None Remove="TestApp.exe" />
+      <None Remove="TestApp.dll" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="mscorlib.dll">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="TestApp.exe">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
+      <EmbeddedResource Include="TestApp.dll" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="USystem\" />
     </ItemGroup>
 
 </Project>

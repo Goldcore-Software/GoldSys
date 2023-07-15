@@ -14,7 +14,7 @@ namespace GoldSysKernel.Core
     {
         [ManifestResourceStream(ResourceName = "GoldSysKernel.mscorlib.dll")]
         private static byte[] mscorlib;
-        [ManifestResourceStream(ResourceName = "GoldSysKernel.TestApp.exe")]
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.TestApp.dll")]
         private static byte[] testapp;
         public static string CurrentDir { get; private set; }
         public static string CurrentVol { get; private set; } = "0";
@@ -150,9 +150,9 @@ namespace GoldSysKernel.Core
                     CSTerminal.WriteLine("You must reboot the system to finish setting up the system drive.",0);
                     break;
                 case "kcp":
-                    if (cmdsplit[1].ToLower() == "testapp.exe")
+                    if (cmdsplit[1].ToLower() == "testapp.dll")
                     {
-                        File.WriteAllBytes(GetFullPath("TestApp.exe"),testapp);
+                        File.WriteAllBytes(GetFullPath("TestApp.dll"),testapp);
                         CSTerminal.WriteLine("Copied TestApp.exe from the kernel into the current directory.",0);
                     }
                     break;
@@ -176,6 +176,7 @@ namespace GoldSysKernel.Core
                         try
                         {
                             Process process = new Process(File.ReadAllBytes(GetFullPath(cmd)));
+                            process.clr.RegisterResolveCallBack(AssemblyCallback);
                             process.clr.Start();
                         }
                         catch (Exception)
@@ -214,6 +215,16 @@ namespace GoldSysKernel.Core
             else
             {
                 return CurrentVol + @":\" + CurrentDir;
+            }
+        }
+        private static byte[] AssemblyCallback(string dll)
+        {
+            switch (dll)
+            {
+                case "System.Private.CoreLib":
+                    return File.ReadAllBytes(Kernel.SystemDrive + @":\GoldSys\dotnet\mscorlib.dll");
+                default:
+                    return null;
             }
         }
     }

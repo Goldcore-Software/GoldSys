@@ -29,8 +29,11 @@ namespace GoldSysKernel.Core.CS
             reg.Clear();
             foreach (var item in regserialized.Split("\n"))
             {
-                keyvalue = item.Split(";");
-                reg.Add(keyvalue[0], keyvalue[1]);
+                if (!(item == string.Empty))
+                {
+                    keyvalue = item.Split(";");
+                    reg.Add(keyvalue[0], keyvalue[1]);
+                }
             }
         }
     }

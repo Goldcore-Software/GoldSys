@@ -1,8 +1,10 @@
 ﻿using GoldSysKernel.Core.CS;
+using IL2CPU.API.Attribs;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +12,10 @@ namespace GoldSysKernel.Core
 {
     internal class Shell
     {
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.mscorlib.dll")]
+        private static byte[] mscorlib;
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.TestApp.exe")]
+        private static byte[] testapp;
         public static string CurrentDir { get; private set; }
         public static string CurrentVol { get; private set; } = "0";
         public static void Command(string cmd)
@@ -138,8 +144,17 @@ namespace GoldSysKernel.Core
                 case "setup":
                     CSTerminal.WriteLine("Setting up system drive...",0);
                     Directory.CreateDirectory(CurrentVol + @":\GoldSys");
+                    Directory.CreateDirectory(CurrentVol + @":\GoldSys\dotnet");
                     CSRegistry.SaveReg(CurrentVol + @":\GoldSys\sys.reg");
+                    File.WriteAllBytes(Kernel.SystemDrive+@":\GoldSys\dotnet\mscorlib.dll",mscorlib);
                     CSTerminal.WriteLine("You must reboot the system to finish setting up the system drive.",0);
+                    break;
+                case "kcp":
+                    if (cmdsplit[1].ToLower() == "testapp.exe")
+                    {
+                        File.WriteAllBytes(GetFullPath("TestApp.exe"),testapp);
+                        CSTerminal.WriteLine("Copied TestApp.exe from the kernel into the current directory.",0);
+                    }
                     break;
                 case "reboot":
                     Cosmos.System.Power.Reboot();
@@ -157,8 +172,20 @@ namespace GoldSysKernel.Core
                             Console.WriteLine("Could not change drive!");
                         }
                         break;
+                    } else if (File.Exists(GetFullPath(cmd))) {
+                        try
+                        {
+                            Process process = new Process(File.ReadAllBytes(GetFullPath(cmd)));
+                            process.clr.Start();
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Command not found!");
+                            throw;
+                        }
+                    } else {
+                        Console.WriteLine("Command not found!");
                     }
-                    Console.WriteLine("Command not found!");
                     break;
             }
         }

@@ -135,6 +135,15 @@ namespace GoldSysKernel.Core
                             break;
                     }
                     break;
+                case "setup":
+                    CSTerminal.WriteLine("Setting up system drive...",0);
+                    Directory.CreateDirectory(CurrentVol + @":\GoldSys");
+                    CSRegistry.SaveReg(CurrentVol + @":\GoldSys\sys.reg");
+                    CSTerminal.WriteLine("You must reboot the system to finish setting up the system drive.",0);
+                    break;
+                case "reboot":
+                    Cosmos.System.Power.Reboot();
+                    break;
                 default:
                     if (cmdsplit[0].EndsWith(":") && cmdsplit[0].Length == 2)
                     {

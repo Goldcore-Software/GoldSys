@@ -9,37 +9,37 @@ namespace GoldSysKernel.Core.CS
     internal class CSLog
     {
         public static int LogTerminal = 1;
-        public static void Log(string messager, string message, GSLogType type) 
+        public static void Log(string messager, string message, CSLogType type) 
         {
             Console.ForegroundColor = ConsoleColor.White;
             CSTerminal.Write("["+messager+"] ", LogTerminal);
             switch (type)
             {
-                case GSLogType.Info:
+                case CSLogType.Info:
                     CSTerminal.Write("[INFO] ", LogTerminal);
                     break;
-                case GSLogType.Fatal:
+                case CSLogType.Fatal:
                     CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Red;
                     CSTerminal.Write("FATAL", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
-                case GSLogType.Error:
+                case CSLogType.Error:
                     CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Red;
                     CSTerminal.Write("ERROR", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
-                case GSLogType.Warning:
+                case CSLogType.Warning:
                     CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     CSTerminal.Write("WARN", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
-                case GSLogType.Ok:
+                case CSLogType.Ok:
                     CSTerminal.Write("[", LogTerminal);
                     Console.ForegroundColor = ConsoleColor.Green;
                     CSTerminal.Write("OK", LogTerminal);
@@ -52,7 +52,7 @@ namespace GoldSysKernel.Core.CS
             CSTerminal.WriteLine(message, LogTerminal);
         }
     }
-    enum GSLogType
+    enum CSLogType
     {
         Info,
         Fatal,

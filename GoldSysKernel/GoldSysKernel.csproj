@@ -22,14 +22,17 @@
 
     <ItemGroup>
       <None Remove="mscorlib.dll" />
+      <None Remove="Programs\GoldEdit.dll" />
       <None Remove="TestApp.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="mscorlib.dll">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="TestApp.dll" />
+      <EmbeddedResource Include="Programs\mscorlib.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Programs\GoldEdit.dll" />
+      <EmbeddedResource Include="Programs\TestApp.dll" />
     </ItemGroup>
 
     <ItemGroup>

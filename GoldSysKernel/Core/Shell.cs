@@ -1,6 +1,8 @@
 ﻿using GoldSysKernel.Core.CS;
 using GoldSysKernel.USystem;
 using IL2CPU.API.Attribs;
+using LibDotNetParser.CILApi;
+using LibDotNetParser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +16,12 @@ namespace GoldSysKernel.Core
 {
     internal class Shell
     {
-        [ManifestResourceStream(ResourceName = "GoldSysKernel.mscorlib.dll")]
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.Programs.mscorlib.dll")]
         private static byte[] mscorlib;
-        [ManifestResourceStream(ResourceName = "GoldSysKernel.TestApp.dll")]
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.Programs.TestApp.dll")]
         private static byte[] testapp;
+        [ManifestResourceStream(ResourceName = "GoldSysKernel.Programs.GoldEdit.dll")]
+        private static byte[] goldedit;
         public static string CurrentDir { get; private set; }
         public static string CurrentVol { get; private set; } = "0";
         public static void Command(string cmd)
@@ -168,10 +172,18 @@ namespace GoldSysKernel.Core
                     }
                     break;
                 case "kcp":
-                    if (cmdsplit[1].ToLower() == "testapp.dll")
+                    switch (cmdsplit[1].ToLower())
                     {
-                        File.WriteAllBytes(GetFullPath("TestApp.dll"),testapp);
-                        CSTerminal.WriteLine("Copied TestApp.exe from the kernel into the current directory.",0);
+                        case "testapp.dll":
+                            File.WriteAllBytes(GetFullPath("TestApp.dll"), testapp);
+                            CSTerminal.WriteLine("Copied TestApp.dll from the kernel into the current directory.", 0);
+                            break;
+                        case "goldedit.dll":
+                            File.WriteAllBytes(GetFullPath("GoldEdit.dll"), goldedit);
+                            CSTerminal.WriteLine("Copied GoldEdit.dll from the kernel into the current directory.", 0);
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 case "reboot":
@@ -195,16 +207,17 @@ namespace GoldSysKernel.Core
                             Console.WriteLine("Could not change drive!");
                         }
                         break;
-                    } else if (File.Exists(GetFullPath(cmd))) {
+                    } else if (File.Exists(GetFullPath(cmdsplit[0]))) {
                         try
                         {
-                            Process process = new Process(File.ReadAllBytes(GetFullPath(cmd)));
+                            Process process = new Process(File.ReadAllBytes(GetFullPath(cmdsplit[0])));
                             process.clr.RegisterResolveCallBack(AssemblyCallback);
+                            process.clr.RegisterCustomInternalMethod("GetFullPath",GetFullPathAPI);
                             process.clr.Start();
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("Command not found!");
+                            //Console.WriteLine("Command not found!");
                             throw;
                         }
                     } else {
@@ -239,6 +252,28 @@ namespace GoldSysKernel.Core
             {
                 return CurrentVol + @":\" + CurrentDir;
             }
+        }
+        public static void GetFullPathAPI(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var name = (string)Stack[Stack.Length - 1].value;
+            Console.WriteLine(name);
+            if (CurrentDir == "")
+            {
+                var ret = new MethodArgStack();
+                ret.type = StackItemType.String;
+                ret.value = CurrentVol + @":\" + name;
+                Console.WriteLine(ret.value);
+                returnValue = ret;
+            }
+            else
+            {
+                var ret = new MethodArgStack();
+                ret.type = StackItemType.String;
+                ret.value = CurrentVol + @":\" + CurrentDir + "\\" + name;
+                Console.WriteLine(ret.value);
+                returnValue = ret;
+            }
+
         }
         private static byte[] AssemblyCallback(string dll)
         {

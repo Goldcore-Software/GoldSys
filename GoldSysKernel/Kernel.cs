@@ -1,10 +1,12 @@
 ﻿using Cosmos.Core.Memory;
 using GoldSysKernel.Core;
 using GoldSysKernel.Core.CS;
+using GoldSysKernel.USystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 using Sys = Cosmos.System;
 
 namespace GoldSysKernel
@@ -12,46 +14,73 @@ namespace GoldSysKernel
     public class Kernel : Sys.Kernel
     {
         public static int bootstage { get; private set; }
-        public static int SystemDrive { get; private set; } = -1;
+        public static int SystemDrive { get; set; } = -1;
         protected override void BeforeRun()
         {
-            Console.Clear();
-            bootstage = 0;
-            Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
-            Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
-            CSLog.LogTerminal = 0;
-            CSLog.Log("COSMOS/Kernel.cs", "File system initialised!", GSLogType.Ok);
-            CSLog.Log("COSMOS/Kernel.cs", "Searching for system drive...", GSLogType.Info);
-            for (int i = 0; i < 9; i++)
+            try
             {
-                if (File.Exists(i+@":\GoldSys\sys.reg"))
+                Console.Clear();
+                bootstage = 0;
+                Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
+                Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
+                CSLog.LogTerminal = 0;
+                CSLog.Log("COSMOS/Kernel.cs", "File system initialised!", CSLogType.Ok);
+                CSLog.Log("COSMOS/Kernel.cs", "Searching for system drive...", CSLogType.Info);
+                for (int i = 0; i < 9; i++)
                 {
-                    SystemDrive = i;
-                    CSLog.Log("COSMOS/Kernel.cs", "Found system drive at \""+i+":\\\".", GSLogType.Ok);
-                    break;
+                    if (File.Exists(i+@":\GoldSys\sys.reg"))
+                    {
+                        SystemDrive = i;
+                        CSLog.Log("COSMOS/Kernel.cs", "Found system drive at \""+i+":\\\".", CSLogType.Ok);
+                        break;
+                    }
+                }
+                if (SystemDrive == -1)
+                {
+                    CSLog.Log("COSMOS/Kernel.cs", "Cannot find system drive. You must set up a drive yourself by typing \"setup\" in the drive that you want to be your system drive.", CSLogType.Warning);
+                }
+                else
+                {
+                    try
+                    {
+                        CSRegistry.DefaultPath = SystemDrive + @":\GoldSys\sys.reg";
+                        CSRegistry.LoadReg();
+                        CSLog.Log("COSMOS/Kernel.cs", "Loaded system registry.", CSLogType.Ok);
+                    }
+                    catch (Exception e)
+                    {
+                        CSLog.Log("COSMOS/Kernel.cs", "Failed to load system registry! The system can still boot but many features will be broken."+e.ToString(), CSLogType.Error);
+                    }
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                CSTerminal.WriteLine("GoldSys - Milestone 2 (0.2)", 0);
+                Console.ForegroundColor = ConsoleColor.White;
+                bootstage = -1;
+                if (!(SystemDrive == -1))
+                {
+                    if (USAccountManager.GetAccount("root") == null)
+                    {
+                        USAccountManager.RegisterAccount("root", "root", USAccountPermLevel.Root);
+                    }
+                    CSTerminal.Write("login: ", 0);
+                    string name = Console.ReadLine();
+                    CSTerminal.Write("password: ", 0);
+                    string pwd = Console.ReadLine();
+                    while (!USAccountManager.Login(name, pwd))
+                    {
+                        CSTerminal.WriteLine("Invalid username/password", 0);
+                        CSTerminal.Write("login: ", 0);
+                        name = Console.ReadLine();
+                        CSTerminal.Write("password: ", 0);
+                        pwd = Console.ReadLine();
+                    }
                 }
             }
-            if (SystemDrive == -1)
+            catch (Exception e)
             {
-                CSLog.Log("COSMOS/Kernel.cs", "Cannot find system drive. You must set up a drive yourself by typing \"setup\" in the drive that you want to be your system drive.", GSLogType.Warning);
+                Console.WriteLine(e.ToString());
             }
-            else
-            {
-                try
-                {
-                    CSRegistry.LoadReg(SystemDrive + @":\GoldSys\sys.reg");
-                    CSLog.Log("COSMOS/Kernel.cs", "Loaded system registry.", GSLogType.Ok);
-                }
-                catch (Exception e)
-                {
-                    CSLog.Log("COSMOS/Kernel.cs", "Failed to load system registry! The system can still boot but many features will be broken."+e.ToString(), GSLogType.Error);
-                }
-                
-            }
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            CSTerminal.WriteLine("GoldSys - Milestone 2 (0.2)", 0);
-            Console.ForegroundColor = ConsoleColor.White;
-            bootstage = -1;
+            
         }
 
         protected override void Run()
@@ -60,7 +89,7 @@ namespace GoldSysKernel
             {
                 if (CSTerminal.DisplayTerminal == 0)
                 {
-                    CSTerminal.Write(Shell.GetFullPath()+"> ", 0);
+                    CSTerminal.Write(USAccountManager.CurrentUser+"&"+Shell.GetFullPath()+"> ", 0);
                     string cmd = Console.ReadLine();
                     try
                     {

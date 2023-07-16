@@ -12,6 +12,7 @@ namespace GoldSysKernel.Core.CS
     {
         public static Dictionary<string, string> reg = new Dictionary<string, string>();
         public static StringBuilder sb = new StringBuilder();
+        public static string DefaultPath;
         public static void SaveReg(string path)
         {
             sb.Clear();
@@ -35,6 +36,14 @@ namespace GoldSysKernel.Core.CS
                     reg.Add(keyvalue[0], keyvalue[1]);
                 }
             }
+        }
+        public static void SaveReg()
+        {
+            SaveReg(DefaultPath);
+        }
+        public static void LoadReg()
+        {
+            LoadReg(DefaultPath);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GoldSysKernel.Core.CS;
+using GoldSysKernel.USystem;
 using IL2CPU.API.Attribs;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace GoldSysKernel.Core
 {
@@ -64,11 +66,11 @@ namespace GoldSysKernel.Core
                     break;
                 case "logtest":
                     CSTerminal.DisplayTerminal = 1;
-                    CSLog.Log("Log Test!", "This is a test of the logger 1", GSLogType.Info);
-                    CSLog.Log("Log Test!", "This is a test of the logger 2", GSLogType.Fatal);
-                    CSLog.Log("Log Test!", "This is a test of the logger 3", GSLogType.Error);
-                    CSLog.Log("Log Test!", "This is a test of the logger 4", GSLogType.Warning);
-                    CSLog.Log("Log Test!", "This is a test of the logger 5", GSLogType.Ok);
+                    CSLog.Log("Log Test!", "This is a test of the logger 1", CSLogType.Info);
+                    CSLog.Log("Log Test!", "This is a test of the logger 2", CSLogType.Fatal);
+                    CSLog.Log("Log Test!", "This is a test of the logger 3", CSLogType.Error);
+                    CSLog.Log("Log Test!", "This is a test of the logger 4", CSLogType.Warning);
+                    CSLog.Log("Log Test!", "This is a test of the logger 5", CSLogType.Ok);
                     break;
                 case "crashtest":
                     throw new Exception("you broke it.");
@@ -145,9 +147,25 @@ namespace GoldSysKernel.Core
                     CSTerminal.WriteLine("Setting up system drive...",0);
                     Directory.CreateDirectory(CurrentVol + @":\GoldSys");
                     Directory.CreateDirectory(CurrentVol + @":\GoldSys\dotnet");
+                    Kernel.SystemDrive = int.Parse(CurrentVol);
+                    CSRegistry.DefaultPath = Kernel.SystemDrive + @":\GoldSys\sys.reg";
+                    USAccountManager.RegisterAccount("root","root",USAccountPermLevel.Root);
                     CSRegistry.SaveReg(CurrentVol + @":\GoldSys\sys.reg");
                     File.WriteAllBytes(Kernel.SystemDrive+@":\GoldSys\dotnet\mscorlib.dll",mscorlib);
                     CSTerminal.WriteLine("You must reboot the system to finish setting up the system drive.",0);
+                    break;
+                case "createuser":
+                    if (USAccountManager.GetAccount(cmdsplit[1]) == null)
+                    {
+                        CSTerminal.WriteLine("Creating new account...", 0);
+                        USAccountManager.RegisterAccount(cmdsplit[1], cmdsplit[2],USAccountPermLevel.Administrator);
+                    } else { CSTerminal.WriteLine("This user already exists.",0); }
+                    break;
+                case "passwd":
+                    if (!(USAccountManager.GetAccount(USAccountManager.CurrentUser) == null))
+                    {
+                        CSRegistry.reg["USAccountManager." + USAccountManager.CurrentUser + ".password"] = cmdsplit[1];
+                    }
                     break;
                 case "kcp":
                     if (cmdsplit[1].ToLower() == "testapp.dll")
@@ -157,6 +175,11 @@ namespace GoldSysKernel.Core
                     }
                     break;
                 case "reboot":
+                    CSTerminal.WriteLine("Restarting...", 0);
+                    if (!(Kernel.SystemDrive == -1))
+                    {
+                        CSRegistry.SaveReg();
+                    }
                     Cosmos.System.Power.Reboot();
                     break;
                 default:

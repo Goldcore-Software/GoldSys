@@ -23,6 +23,7 @@
     <ItemGroup>
       <None Remove="mscorlib.dll" />
       <None Remove="Programs\GoldEdit.dll" />
+      <None Remove="Resources\cursor.bmp" />
       <None Remove="TestApp.dll" />
     </ItemGroup>
 
@@ -33,6 +34,7 @@
     <ItemGroup>
       <EmbeddedResource Include="Programs\GoldEdit.dll" />
       <EmbeddedResource Include="Programs\TestApp.dll" />
+      <EmbeddedResource Include="Resources\cursor.bmp" />
     </ItemGroup>
 
     <ItemGroup>

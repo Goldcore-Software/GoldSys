@@ -4,13 +4,8 @@ using IL2CPU.API.Attribs;
 using LibDotNetParser.CILApi;
 using LibDotNetParser;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+using GoldSysKernel.GSystem;
 
 namespace GoldSysKernel.Core
 {
@@ -193,6 +188,9 @@ namespace GoldSysKernel.Core
                         CSRegistry.SaveReg();
                     }
                     Cosmos.System.Power.Reboot();
+                    break;
+                case "gs":
+                    GSManager.ChangeToGraphicsMode();
                     break;
                 default:
                     if (cmdsplit[0].EndsWith(":") && cmdsplit[0].Length == 2)

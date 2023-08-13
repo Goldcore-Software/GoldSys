@@ -1,12 +1,11 @@
-﻿using Cosmos.Core.Memory;
+﻿using Cosmos.System;
 using GoldSysKernel.Core;
 using GoldSysKernel.Core.CS;
+using GoldSysKernel.GSystem;
 using GoldSysKernel.USystem;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Xml.Linq;
+using Console = System.Console;
 using Sys = Cosmos.System;
 
 namespace GoldSysKernel
@@ -24,7 +23,7 @@ namespace GoldSysKernel
                 Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
                 CSLog.LogTerminal = 0;
-                CSLog.Log("COSMOS/Kernel.cs", "File system initialised!", CSLogType.Ok);
+                CSLog.Log("COSMOS/Kernel.cs", "File system initialized!", CSLogType.Ok);
                 CSLog.Log("COSMOS/Kernel.cs", "Searching for system drive...", CSLogType.Info);
                 for (int i = 0; i < 9; i++)
                 {
@@ -52,6 +51,10 @@ namespace GoldSysKernel
                         CSLog.Log("COSMOS/Kernel.cs", "Failed to load system registry! The system can still boot but many features will be broken."+e.ToString(), CSLogType.Error);
                     }
                 }
+                GSManager.Initialize();
+                MouseManager.ScreenHeight = 480;
+                MouseManager.ScreenWidth = 640;
+                CSLog.Log("COSMOS/Kernel.cs","Initialized the Graphics Manager.",CSLogType.Ok);
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 CSTerminal.WriteLine("GoldSys - Milestone 2 (0.2)", 0);
                 Console.ForegroundColor = ConsoleColor.White;
@@ -99,6 +102,10 @@ namespace GoldSysKernel
                     {
                         Console.WriteLine(e.ToString());
                     }
+                }
+                else if (CSTerminal.DisplayTerminal == 2)
+                {
+                    GSManager.Draw();
                 }
             }
             catch (Exception e)

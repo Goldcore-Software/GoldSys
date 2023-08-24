@@ -14,7 +14,7 @@ namespace GoldSysKernel
     {
         public static int bootstage { get; private set; }
         public static int SystemDrive { get; set; } = -1;
-        public static readonly int KernelVersion = 12; // Build/Commit 12
+        public static readonly int KernelVersion = 14; // Build/Commit 14
         public static readonly int SystemMilestone = 3; // Milestone 3
         protected override void BeforeRun()
         {

@@ -16,6 +16,7 @@ namespace GoldSysKernel.GSystem
         [ManifestResourceStream(ResourceName = "GoldSysKernel.Resources.cursor.bmp")]
         public static byte[] cursorbytes;
         public static Image cursor;
+        public static List<Window> Windows = new List<Window>();
         public static void Initialize()
         {
             cursor = new Bitmap(cursorbytes);

@@ -1,5 +1,5 @@
 ﻿using Cosmos.HAL.BlockDevice.Registers;
-using GoldSysKernel.Core.CS;
+using GoldSysKernel.Core.CSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;

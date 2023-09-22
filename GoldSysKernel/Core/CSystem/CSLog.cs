@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoldSysKernel.Core.CS
+namespace GoldSysKernel.Core.CSystem
 {
     internal class CSLog
     {
         public static int LogTerminal = 1;
-        public static void Log(string messager, string message, CSLogType type) 
+        public static void Log(string messager, string message, CSLogType type)
         {
             CSTerminal.ForegroundColor = ConsoleColor.White;
-            CSTerminal.Write("["+messager+"] ", LogTerminal);
+            CSTerminal.Write("[" + messager + "] ", LogTerminal);
             switch (type)
             {
                 case CSLogType.Info:

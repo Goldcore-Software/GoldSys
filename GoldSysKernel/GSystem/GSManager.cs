@@ -2,7 +2,7 @@
 using System.Drawing;
 using Cosmos.System;
 using Cosmos.System.Graphics;
-using GoldSysKernel.Core.CS;
+using GoldSysKernel.Core.CSystem;
 using IL2CPU.API.Attribs;
 
 namespace GoldSysKernel.GSystem

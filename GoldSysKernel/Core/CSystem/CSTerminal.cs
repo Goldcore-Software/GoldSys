@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace GoldSysKernel.Core.CS
+namespace GoldSysKernel.Core.CSystem
 {
     public class CSTerminal
     {

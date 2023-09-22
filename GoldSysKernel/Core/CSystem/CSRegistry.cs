@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GoldSysKernel.Core.CS
+namespace GoldSysKernel.Core.CSystem
 {
     internal class CSRegistry
     {

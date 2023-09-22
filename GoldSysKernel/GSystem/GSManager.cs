@@ -94,8 +94,7 @@ namespace GoldSysKernel.GSystem
             screen.Clear(desktopBackground);
             screen.DrawFilledRectangle(taskbarColor, 0, 0, 640, 30);
             screen.DrawFilledRectangle(Color.Red,610,0,30,30);
-            screen.DrawString("GoldSys", PCScreenFont.Default,Color.White,5,8);
-            screen.DrawString("FPS: " + FPS.ToString(),PCScreenFont.Default, Color.White, 5, 621);
+            screen.DrawString("GoldSys | " + "FPS: " + FPS.ToString(), PCScreenFont.Default,Color.White,5,8);
         }
         public static void DrawCursor()
         {

@@ -13,7 +13,7 @@ namespace GoldSysKernel
     {
         public static int bootstage { get; private set; }
         public static int SystemDrive { get; set; } = -1;
-        public static readonly int KernelVersion = 14; // Build/Commit 14
+        public static readonly int KernelVersion = 17; // Build/Commit 17
         public static readonly int SystemMilestone = 3; // Milestone 3
         protected override void BeforeRun()
         {
@@ -57,7 +57,7 @@ namespace GoldSysKernel
                 MouseManager.ScreenWidth = 640;
                 CSLog.Log("COSMOS/Kernel.cs","Initialized the Graphics Manager.",CSLogType.Ok);
                 CSTerminal.ForegroundColor = ConsoleColor.Yellow;
-                CSTerminal.WriteLine("GoldSys - Milestone 2 (0.2)", 0);
+                CSTerminal.WriteLine("GoldSys - Milestone 3 (0.3)", 0);
                 CSTerminal.ForegroundColor = ConsoleColor.White;
                 bootstage = -1;
                 if (!(SystemDrive == -1))
@@ -93,7 +93,7 @@ namespace GoldSysKernel
             {
                 if (CSTerminal.DisplayTerminal == 0)
                 {
-                    CSTerminal.Write(USAccountManager.CurrentUser+"&"+Shell.GetFullPath()+"> ", 0);
+                    CSTerminal.Write(USAccountManager.CurrentUser+"@"+Shell.GetFullPath()+"> ", 0);
                     string cmd = CSTerminal.ReadLine();
                     try
                     {

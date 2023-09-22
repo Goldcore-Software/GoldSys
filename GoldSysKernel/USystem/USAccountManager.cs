@@ -39,7 +39,7 @@ namespace GoldSysKernel.USystem
         {
             if (CSRegistry.reg.ContainsKey("USAccountManager." + name + ".password"))
             {
-                return new USAccount(name, CSRegistry.reg["USAccountManager." + name + ".password"], ((USAccountPermLevel)int.Parse(CSRegistry.reg["USAccountManager." + name + ".perms"])));
+                return new USAccount(name, CSRegistry.reg["USAccountManager." + name + ".password"], (USAccountPermLevel)int.Parse(CSRegistry.reg["USAccountManager." + name + ".perms"].Trim()));
             }
             return null;
         }
@@ -52,10 +52,10 @@ namespace GoldSysKernel.USystem
     }
     public enum USAccountPermLevel
     {
-        Guest,
-        User,
-        Administrator,
-        Root
+        Guest = 0,
+        User = 1,
+        Administrator = 2,
+        Root = 3
     }
     public class USAccount
     {
@@ -70,7 +70,7 @@ namespace GoldSysKernel.USystem
         }
         public bool CheckPwd(string pwd)
         {
-            if ((password == null) || (password == string.Empty)) { return true; } else if (password == pwd) { return true; }
+            if ((password == null) || (password == string.Empty)) { return true; } else if (password.Trim() == pwd.Trim()) { return true; }
             return false;
         }
     }

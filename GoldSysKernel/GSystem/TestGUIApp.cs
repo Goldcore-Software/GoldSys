@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoldSysKernel.GSystem
+﻿namespace GoldSysKernel.GSystem
 {
     internal class TestGUIApp : Window
     {
@@ -16,6 +10,11 @@ namespace GoldSysKernel.GSystem
         public override void Open()
         {
             Title = "Test Application";
+        }
+
+        public override void Run()
+        {
+            
         }
     }
 }

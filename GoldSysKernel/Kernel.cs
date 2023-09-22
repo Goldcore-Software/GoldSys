@@ -5,7 +5,6 @@ using GoldSysKernel.GSystem;
 using GoldSysKernel.USystem;
 using System;
 using System.IO;
-using Console = System.Console;
 using Sys = Cosmos.System;
 
 namespace GoldSysKernel
@@ -20,7 +19,7 @@ namespace GoldSysKernel
         {
             try
             {
-                Console.Clear();
+                CSTerminal.Clear();
                 bootstage = 0;
                 Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
@@ -57,9 +56,9 @@ namespace GoldSysKernel
                 MouseManager.ScreenHeight = 480;
                 MouseManager.ScreenWidth = 640;
                 CSLog.Log("COSMOS/Kernel.cs","Initialized the Graphics Manager.",CSLogType.Ok);
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                CSTerminal.ForegroundColor = ConsoleColor.Yellow;
                 CSTerminal.WriteLine("GoldSys - Milestone 2 (0.2)", 0);
-                Console.ForegroundColor = ConsoleColor.White;
+                CSTerminal.ForegroundColor = ConsoleColor.White;
                 bootstage = -1;
                 if (!(SystemDrive == -1))
                 {
@@ -68,22 +67,22 @@ namespace GoldSysKernel
                         USAccountManager.RegisterAccount("root", "root", USAccountPermLevel.Root);
                     }
                     CSTerminal.Write("login: ", 0);
-                    string name = Console.ReadLine();
+                    string name = CSTerminal.ReadLine();
                     CSTerminal.Write("password: ", 0);
-                    string pwd = Console.ReadLine();
+                    string pwd = CSTerminal.ReadLine();
                     while (!USAccountManager.Login(name, pwd))
                     {
                         CSTerminal.WriteLine("Invalid username/password", 0);
                         CSTerminal.Write("login: ", 0);
-                        name = Console.ReadLine();
+                        name = CSTerminal.ReadLine();
                         CSTerminal.Write("password: ", 0);
-                        pwd = Console.ReadLine();
+                        pwd = CSTerminal.ReadLine();
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                CSTerminal.WriteLine(e.ToString());
             }
             
         }
@@ -95,14 +94,14 @@ namespace GoldSysKernel
                 if (CSTerminal.DisplayTerminal == 0)
                 {
                     CSTerminal.Write(USAccountManager.CurrentUser+"&"+Shell.GetFullPath()+"> ", 0);
-                    string cmd = Console.ReadLine();
+                    string cmd = CSTerminal.ReadLine();
                     try
                     {
                         Shell.Command(cmd);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.ToString());
+                        CSTerminal.WriteLine(e.ToString());
                     }
                 }
                 else if (CSTerminal.DisplayTerminal == 2)
@@ -118,9 +117,9 @@ namespace GoldSysKernel
         private static void Crash(Exception e)
         {
             CSTerminal.DisplayTerminal = -1;
-            Console.BackgroundColor = ConsoleColor.Red;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Clear();
+            CSTerminal.BackgroundColor = ConsoleColor.Red;
+            CSTerminal.ForegroundColor = ConsoleColor.White;
+            CSTerminal.Clear();
             CSTerminal.WriteLine("Oops! GoldSys has crashed.", -1);
             CSTerminal.WriteLine("The exception was: "+e.ToString(), -1);
             CSTerminal.WriteLine("Please contact the developer, eli310#9755!", -1);

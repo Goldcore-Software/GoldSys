@@ -11,7 +11,7 @@ namespace GoldSysKernel.Core.CS
         public static int LogTerminal = 1;
         public static void Log(string messager, string message, CSLogType type) 
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            CSTerminal.ForegroundColor = ConsoleColor.White;
             CSTerminal.Write("["+messager+"] ", LogTerminal);
             switch (type)
             {
@@ -20,30 +20,30 @@ namespace GoldSysKernel.Core.CS
                     break;
                 case CSLogType.Fatal:
                     CSTerminal.Write("[", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    CSTerminal.ForegroundColor = ConsoleColor.Red;
                     CSTerminal.Write("FATAL", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CSTerminal.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
                 case CSLogType.Error:
                     CSTerminal.Write("[", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    CSTerminal.ForegroundColor = ConsoleColor.Red;
                     CSTerminal.Write("ERROR", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CSTerminal.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
                 case CSLogType.Warning:
                     CSTerminal.Write("[", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    CSTerminal.ForegroundColor = ConsoleColor.Yellow;
                     CSTerminal.Write("WARN", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CSTerminal.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
                 case CSLogType.Ok:
                     CSTerminal.Write("[", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    CSTerminal.ForegroundColor = ConsoleColor.Green;
                     CSTerminal.Write("OK", LogTerminal);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CSTerminal.ForegroundColor = ConsoleColor.White;
                     CSTerminal.Write("] ", LogTerminal);
                     break;
                 default:

@@ -1,9 +1,9 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using GoldSysKernel.Core.CS;
 using IL2CPU.API.Attribs;
-using Console = System.Console;
 
 namespace GoldSysKernel.GSystem
 {
@@ -17,6 +17,7 @@ namespace GoldSysKernel.GSystem
         public static byte[] cursorbytes;
         public static Image cursor;
         public static List<Window> Windows = new List<Window>();
+        public static int ActiveWindow = 0;
         public static void Initialize()
         {
             cursor = new Bitmap(cursorbytes);
@@ -32,7 +33,7 @@ namespace GoldSysKernel.GSystem
         public static void ExitGraphicsMode()
         {
             screen.Disable();
-            Console.Clear();
+            CSTerminal.Clear();
             graphicsMode = false;
             CSTerminal.DisplayTerminal = 0;
         }
@@ -40,6 +41,18 @@ namespace GoldSysKernel.GSystem
         {
             DrawDesktop();
             DrawCursor();
+            foreach (var wind in Windows)
+            {
+                wind.Draw();
+            }
+            if (Windows.Count != 0 && Windows.Count >= ActiveWindow+1)
+            {
+                // yes I do call Draw() twice
+                // this is to make sure that the active window is on top
+                // I should probably make it not call Draw() the first time but eh
+                Windows[ActiveWindow].Draw();
+                Windows[ActiveWindow].Run();
+            }
             screen.Display();
             if (MouseManager.MouseState == MouseState.Left)
             {

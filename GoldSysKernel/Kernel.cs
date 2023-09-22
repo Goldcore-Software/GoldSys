@@ -1,6 +1,6 @@
 ﻿using Cosmos.System;
 using GoldSysKernel.Core;
-using GoldSysKernel.Core.CS;
+using GoldSysKernel.Core.CSystem;
 using GoldSysKernel.GSystem;
 using GoldSysKernel.USystem;
 using System;

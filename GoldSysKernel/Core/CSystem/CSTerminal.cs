@@ -23,7 +23,7 @@ namespace GoldSysKernel.Core.CS
             if (Kernel.bootstage == -1)
             {
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("GSTerminal - Terminal " + newterm);
+                Console.WriteLine("CSTerminal - Terminal " + newterm);
             }
         }
         public static void WriteLine(object text, int terminal)

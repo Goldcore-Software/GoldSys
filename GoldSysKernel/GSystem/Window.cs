@@ -16,6 +16,7 @@ namespace GoldSysKernel.GSystem
         public int PositionY = 60;
         public abstract void Draw();
         public abstract void Open();
+        public abstract void Run();
         public void DrawTitleBar()
         {
             GSManager.screen.DrawFilledRectangle(Color.Aqua,PositionX,PositionY-30,SizeX,30);

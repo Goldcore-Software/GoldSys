@@ -1,8 +1,6 @@
 ﻿using GoldSysKernel.Core.CS;
 using GoldSysKernel.USystem;
 using IL2CPU.API.Attribs;
-using LibDotNetParser.CILApi;
-using LibDotNetParser;
 using System;
 using System.IO;
 using GoldSysKernel.GSystem;
@@ -54,14 +52,14 @@ namespace GoldSysKernel.Core
                     if (!Directory.Exists(CurrentVol + ":\\" + CurrentDir))
                     {
                         CurrentDir = bdir;
-                        Console.WriteLine("Directory not found!");
+                        CSTerminal.WriteLine("Directory not found!");
                     }
                     break;
                 case "term":
                     CSTerminal.DisplayTerminal = int.Parse(cmdsplit[1]);
                     break;
                 case "cls":
-                    Console.Clear();
+                    CSTerminal.Clear();
                     break;
                 case "logtest":
                     CSTerminal.DisplayTerminal = 1;
@@ -88,31 +86,31 @@ namespace GoldSysKernel.Core
                 case "ls":
                     string[] filePaths = Directory.GetFiles(GetFullPath());
                     var drive = new DriveInfo(CurrentVol);
-                    Console.WriteLine("Volume in drive 0 is " + $"{drive.VolumeLabel}");
-                    Console.WriteLine("Directory of " + GetFullPath());
-                    Console.WriteLine("\n");
+                    CSTerminal.WriteLine("Volume in drive 0 is " + $"{drive.VolumeLabel}");
+                    CSTerminal.WriteLine("Directory of " + GetFullPath());
+                    CSTerminal.WriteLine("\n");
                     if (filePaths.Length == 0 && Directory.GetDirectories(GetFullPath()).Length == 0)
                     {
-                        Console.WriteLine("File Not Found");
+                        CSTerminal.WriteLine("File Not Found");
                     }
                     else
                     {
                         for (int i = 0; i < filePaths.Length; ++i)
                         {
                             string path = filePaths[i];
-                            Console.WriteLine(Path.GetFileName(path));
+                            CSTerminal.WriteLine(Path.GetFileName(path));
                         }
                         foreach (var d in Directory.GetDirectories(GetFullPath()))
                         {
                             var dir = new DirectoryInfo(d);
                             var dirName = dir.Name;
 
-                            Console.WriteLine(dirName + " <DIR>");
+                            CSTerminal.WriteLine(dirName + " <DIR>");
                         }
                     }
-                    Console.WriteLine("\n");
-                    Console.WriteLine("        " + $"{drive.TotalSize}" + " bytes");
-                    Console.WriteLine("        " + $"{drive.AvailableFreeSpace}" + " bytes free");
+                    CSTerminal.WriteLine("\n");
+                    CSTerminal.WriteLine("        " + $"{drive.TotalSize}" + " bytes");
+                    CSTerminal.WriteLine("        " + $"{drive.AvailableFreeSpace}" + " bytes free");
                     break;
                 case "writefile":
                     string contents = cmd.Substring(cmdsplit[0].Length + cmdsplit[1].Length + 2);
@@ -121,22 +119,22 @@ namespace GoldSysKernel.Core
                 case "cat":
                     if (File.Exists(GetFullPath(cmdsplit[1])))
                     {
-                        Console.WriteLine("File exists! (File.Exists())");
+                        CSTerminal.WriteLine("File exists! (File.Exists())");
                     }
                     else
                     {
-                        Console.WriteLine("File does not exist! (File.Exists())");
+                        CSTerminal.WriteLine("File does not exist! (File.Exists())");
                     }
-                    Console.WriteLine(File.ReadAllText(GetFullPath(cmdsplit[1])));
+                    CSTerminal.WriteLine(File.ReadAllText(GetFullPath(cmdsplit[1])));
                     break;
                 case "debug":
                     switch (cmdsplit[1])
                     {
                         case "currentdir":
-                            Console.WriteLine(CurrentDir);
+                            CSTerminal.WriteLine(CurrentDir);
                             break;
                         case "currentvol":
-                            Console.WriteLine(CurrentVol);
+                            CSTerminal.WriteLine(CurrentVol);
                             break;
                         default:
                             break;
@@ -192,6 +190,10 @@ namespace GoldSysKernel.Core
                 case "gs":
                     GSManager.ChangeToGraphicsMode();
                     break;
+                case "tuitest":
+                    int returnval = USTUI.ShowMenu(new string[] { "Option 1","Option 2","OOOOOOOOO","Test" }, "TUI Test");
+                    CSTerminal.WriteLine(returnval.ToString()+" was chosen");
+                    break;
                 default:
                     if (cmdsplit[0].EndsWith(":") && cmdsplit[0].Length == 2)
                     {
@@ -202,24 +204,11 @@ namespace GoldSysKernel.Core
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("Could not change drive!");
+                            CSTerminal.WriteLine("Could not change drive!");
                         }
                         break;
-                    } else if (File.Exists(GetFullPath(cmdsplit[0]))) {
-                        try
-                        {
-                            Process process = new Process(File.ReadAllBytes(GetFullPath(cmdsplit[0])));
-                            process.clr.RegisterResolveCallBack(AssemblyCallback);
-                            process.clr.RegisterCustomInternalMethod("GetFullPath",GetFullPathAPI);
-                            process.clr.Start();
-                        }
-                        catch (Exception)
-                        {
-                            //Console.WriteLine("Command not found!");
-                            throw;
-                        }
                     } else {
-                        Console.WriteLine("Command not found!");
+                        CSTerminal.WriteLine("Command not found!");
                     }
                     break;
             }
@@ -250,28 +239,6 @@ namespace GoldSysKernel.Core
             {
                 return CurrentVol + @":\" + CurrentDir;
             }
-        }
-        public static void GetFullPathAPI(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
-        {
-            var name = (string)Stack[Stack.Length - 1].value;
-            Console.WriteLine(name);
-            if (CurrentDir == "")
-            {
-                var ret = new MethodArgStack();
-                ret.type = StackItemType.String;
-                ret.value = CurrentVol + @":\" + name;
-                Console.WriteLine(ret.value);
-                returnValue = ret;
-            }
-            else
-            {
-                var ret = new MethodArgStack();
-                ret.type = StackItemType.String;
-                ret.value = CurrentVol + @":\" + CurrentDir + "\\" + name;
-                Console.WriteLine(ret.value);
-                returnValue = ret;
-            }
-
         }
         private static byte[] AssemblyCallback(string dll)
         {

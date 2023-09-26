@@ -15,7 +15,7 @@ namespace GoldSysKernel.GSystem.Controls
         public override void Draw()
         {
             GSManager.screen.DrawRectangle(Color.Black,PositionX,PositionY,SizeX,SizeY);
-            GSManager.screen.DrawString(Text,PCScreenFont.Default,Color.Black,PositionX+5,(PositionY+(SizeY/2))-7);
+            GSManager.screen.DrawString(Text,PCScreenFont.Default,Color.Black,PositionX+5,(PositionY+(SizeY/2))-8);
         }
 
         public bool Run()

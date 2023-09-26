@@ -23,12 +23,13 @@ namespace GoldSysKernel.GSystem.Windows
         {
             PositionX = 100;
             PositionY = 100;
-            SizeX = 180;
+            SizeX = (message.Length * 8) + 10;
+            if (SizeX < 125) { SizeX = 125; }
             SizeY = 75;
             okbutton = new Button();
             okbutton.Text = "OK";
-            okbutton.PositionX = PositionX + 110;
-            okbutton.PositionY = PositionY + 40;
+            okbutton.PositionX = PositionX + SizeX - 70;
+            okbutton.PositionY = PositionY + SizeY - 35;
             okbutton.SizeX = 65;
             okbutton.SizeY = 30;
         }

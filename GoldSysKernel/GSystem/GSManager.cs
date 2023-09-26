@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Cosmos.Core.Memory;
 using Cosmos.System;
@@ -14,7 +15,7 @@ namespace GoldSysKernel.GSystem
     {
         public static VBECanvas screen;
         public static Color desktopBackground = Color.DodgerBlue;
-        public static Color taskbarColor = Color.Goldenrod;
+        public static Color taskbarColor = Color.DarkViolet;
         public static bool graphicsMode = false;
         [ManifestResourceStream(ResourceName = "GoldSysKernel.Resources.cursor.bmp")]
         public static byte[] cursorbytes;
@@ -54,9 +55,11 @@ namespace GoldSysKernel.GSystem
             screen.Display();
             graphicsMode = true;
             CSTerminal.DisplayTerminal = 2;
+            GSMessageBox.ShowMsgBox("Message box test","Message Box!");
         }
         public static void ExitGraphicsMode()
         {
+            Windows.Clear();
             screen.Disable();
             CSTerminal.Clear();
             graphicsMode = false;
@@ -66,19 +69,34 @@ namespace GoldSysKernel.GSystem
         {
             UpdateFPS();
             DrawDesktop();
-            DrawCursor();
+            
+            int i = 0;
             foreach (var wind in Windows)
             {
-                wind.Draw();
+                if (wind.Closed)
+                {
+                    // delete the Window that has closed
+                    Windows.Remove(wind);
+                }
+                else
+                {
+                    // draw the actual window
+                    wind.DrawTitleBar();
+                    // draw all controls of the window
+                    wind.Draw();
+                }
+                i++;
             }
             if (Windows.Count != 0 && Windows.Count >= ActiveWindow+1)
             {
                 // yes I do call Draw() twice
                 // this is to make sure that the active window is on top
                 // I should probably make it not call Draw() the first time but eh
+                Windows[ActiveWindow].DrawTitleBar();
                 Windows[ActiveWindow].Draw();
                 Windows[ActiveWindow].Run();
             }
+            DrawCursor();
             screen.Display();
             if (MouseManager.MouseState == MouseState.Left)
             {
@@ -99,6 +117,12 @@ namespace GoldSysKernel.GSystem
         public static void DrawCursor()
         {
             screen.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y);
+        }
+        public static void OpenWindow(Window window)
+        {
+            window.Open();
+            Windows.Add(window);
+            ActiveWindow = Windows.Count - 1;
         }
     }
 }

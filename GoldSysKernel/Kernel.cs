@@ -13,45 +13,54 @@ namespace GoldSysKernel
     {
         public static int bootstage { get; private set; }
         public static int SystemDrive { get; set; } = -1;
-        public static readonly int KernelVersion = 20; // Build/Commit 20
+        public static readonly int KernelVersion = 21; // Build/Commit 20
         public static readonly int SystemMilestone = 4; // 1.0
+        public static readonly int FSSupport = 1; // Set to 1 to build with filesystem support 
         protected override void BeforeRun()
         {
             try
             {
                 CSTerminal.Clear();
                 bootstage = 0;
-                Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
-                CSLog.LogTerminal = 0;
-                CSLog.Log("COSMOS/Kernel.cs", "File system initialized!", CSLogType.Ok);
-                CSLog.Log("COSMOS/Kernel.cs", "Searching for system drive...", CSLogType.Info);
-                for (int i = 0; i < 9; i++)
+                if (FSSupport == 1)
                 {
-                    if (File.Exists(i+@":\GoldSys\sys.reg"))
+                    Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
+                    Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
+                    CSLog.LogTerminal = 0;
+                    CSLog.Log("COSMOS/Kernel.cs", "File system initialized!", CSLogType.Ok);
+                    CSLog.Log("COSMOS/Kernel.cs", "Searching for system drive...", CSLogType.Info);
+                    for (int i = 0; i < 9; i++)
                     {
-                        SystemDrive = i;
-                        CSLog.Log("COSMOS/Kernel.cs", "Found system drive at \""+i+":\\\".", CSLogType.Ok);
-                        break;
+                        if (File.Exists(i + @":\GoldSys\sys.reg"))
+                        {
+                            SystemDrive = i;
+                            CSLog.Log("COSMOS/Kernel.cs", "Found system drive at \"" + i + ":\\\".", CSLogType.Ok);
+                            break;
+                        }
                     }
-                }
-                if (SystemDrive == -1)
-                {
-                    CSLog.Log("COSMOS/Kernel.cs", "Cannot find system drive. You must set up a drive yourself by typing \"setup\" in the drive that you want to be your system drive.", CSLogType.Warning);
+                    if (SystemDrive == -1)
+                    {
+                        CSLog.Log("COSMOS/Kernel.cs", "Cannot find system drive. You must set up a drive yourself by typing \"setup\" in the drive that you want to be your system drive.", CSLogType.Warning);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            CSRegistry.DefaultPath = SystemDrive + @":\GoldSys\sys.reg";
+                            CSRegistry.LoadReg();
+                            CSLog.Log("COSMOS/Kernel.cs", "Loaded system registry.", CSLogType.Ok);
+                        }
+                        catch (Exception e)
+                        {
+                            CSLog.Log("COSMOS/Kernel.cs", "Failed to load system registry! The system can still boot but many features will be broken." + e.ToString(), CSLogType.Error);
+                        }
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        CSRegistry.DefaultPath = SystemDrive + @":\GoldSys\sys.reg";
-                        CSRegistry.LoadReg();
-                        CSLog.Log("COSMOS/Kernel.cs", "Loaded system registry.", CSLogType.Ok);
-                    }
-                    catch (Exception e)
-                    {
-                        CSLog.Log("COSMOS/Kernel.cs", "Failed to load system registry! The system can still boot but many features will be broken."+e.ToString(), CSLogType.Error);
-                    }
+                    CSLog.Log("COSMOS/Kernel.cs", "System was built without filesystem support. Skipping FS initialization.",CSLogType.Info);
                 }
+                
                 GSManager.Initialize();
                 MouseManager.ScreenHeight = 480;
                 MouseManager.ScreenWidth = 640;
